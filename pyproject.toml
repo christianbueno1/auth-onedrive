@@ -12,3 +12,7 @@ python = "^3.12"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# script
+[tool.poetry.scripts]
+start = "auth_onedrive.main:app"
