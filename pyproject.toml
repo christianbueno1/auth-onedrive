@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+msal = "^1.30.0"
+requests = "^2.32.3"
+msgraph-core = "^1.1.2"
 
 
 [build-system]
