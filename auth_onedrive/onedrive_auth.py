@@ -1,75 +1,59 @@
 import asyncio
-import os
 from dotenv import load_dotenv
-from azure.identity.aio import ClientSecretCredential
 from msgraph import GraphServiceClient
-from msgraph.generated.drives.item.items.items_request_builder import ItemsRequestBuilder
-from msgraph.generated.models.drive_item import DriveItem
+
+from auth_onedrive.access_token import get_access_token, AsyncTokenCredential
 
 load_dotenv()
 
-# Azure AD app details
-TENANT_ID = os.getenv("TENANT_ID")
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-SCOPES = ['https://graph.microsoft.com/.default']
+# SCOPES = ['https://graph.microsoft.com/.default', 'User.Read', 'Files.Read.All']
+# SCOPES = ['User.Read', 'Files.Read.All']
+SCOPES = ['User.Read']
 
-async def get_client():
-    credentials = ClientSecretCredential(TENANT_ID, CLIENT_ID, CLIENT_SECRET)
-    client = GraphServiceClient(credentials=credentials, scopes=SCOPES)
-    return client
-
-async def list_files(client):
+async def get_onedrive_info(token: AsyncTokenCredential):
     try:
-        # Correct method to list files in the root directory
-        print(f"client: {client}\n")
-        drive_items = await client.me.drive.root.children.get()
-        for item in drive_items:
-            print(item.name)
+
+        # Create a GraphServiceClient object with delegated permissions
+        client = GraphServiceClient(credentials=token, scopes=SCOPES)
+        print("Client created.")
+
+        # Get user information (optional)
+        # user = await client.me.get()
+        # print("User information:")
+        # print(user)
+        
+        drive = await client.me.drive.get()
+        if drive:
+            print(f"Drive information: {drive}")
+        else:
+            print("Failed to retrieve drive information.")
+
+        # # Get OneDrive information
+        # drive = await client.drive().get()
+        # print("OneDrive information:")
+        # print(drive)
+
+        # # Get a list of files in the root folder (optional)
+        # files = await client.drive("root").children().get()
+        # if files:
+        #     print("Files in the root folder:")
+        #     for file in files.value:
+        #         print(file)
+        # else:
+        #     print("Failed to retrieve files in the root folder.")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Error: {e}")
+        print(f"Error: {e.args}")
 
-async def upload_file(client, file_path, file_name):
-    with open(file_path, 'rb') as upload_file:
-        file_content = upload_file.read()
-
-    drive_item = DriveItem()
-    drive_item.name = file_name
-
-    uploaded_item = await client.me.drive.root.children.post(drive_item)
-    upload_session = await client.me.drive.items[uploaded_item.id].create_upload_session.post()
-
-    # For simplicity, we're uploading the entire file at once.
-    # For larger files, you should implement chunked upload.
-    await client.drives[uploaded_item.parent_reference.drive_id].items[uploaded_item.id].upload_session.put(content=file_content)
-
-    print(f"File uploaded: {file_name}")
-
-async def download_file(client, file_name, local_path):
-    items = await client.me.drive.root.children.get()
-    file_to_download = next((item for item in items.value if item.name == file_name), None)
-
-    if file_to_download:
-        content = await client.me.drive.items[file_to_download.id].content.get()
-        with open(local_path, 'wb') as file:
-            file.write(content)
-        print(f"File downloaded: {local_path}")
-    else:
-        print(f"File not found: {file_name}")
 
 async def main():
-    client = await get_client()
+    token = await get_access_token()
+    if token:
+      credential = AsyncTokenCredential(token)
+      await get_onedrive_info(credential)
+    else:
+      print("Failed to connect to OneDrive.")
 
-    print("Listing files:")
-    await list_files(client)
-
-    # print("\nUploading file:")
-    # await upload_file(client, "path/to/local/file.txt", "uploaded_file.txt")
-
-    # print("\nDownloading file:")
-    # await download_file(client, "uploaded_file.txt", "path/to/downloaded_file.txt")
-
-    await client.close()
-
+  
 if __name__ == "__main__":
     asyncio.run(main())

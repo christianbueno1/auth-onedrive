@@ -1,7 +1,7 @@
 # Notes
 ```
 # auth
-msl
+msal
 
 # Microsoft Graph
 msgraph-sdk
