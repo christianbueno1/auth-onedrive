@@ -1,13 +1,17 @@
 import asyncio
+import os
+from dotenv import load_dotenv
 from azure.identity.aio import ClientSecretCredential
 from msgraph import GraphServiceClient
 from msgraph.generated.drives.item.items.items_request_builder import ItemsRequestBuilder
 from msgraph.generated.models.drive_item import DriveItem
 
+load_dotenv()
+
 # Azure AD app details
-TENANT_ID = "your_tenant_id"
-CLIENT_ID = "your_client_id"
-CLIENT_SECRET = "your_client_secret"
+TENANT_ID = os.getenv("TENANT_ID")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 SCOPES = ['https://graph.microsoft.com/.default']
 
 async def get_client():
@@ -16,9 +20,14 @@ async def get_client():
     return client
 
 async def list_files(client):
-    drive_items = await client.me.drive.root.children.get()
-    for item in drive_items.value:
-        print(f"Name: {item.name}, Type: {'File' if item.file else 'Folder'}")
+    try:
+        # Correct method to list files in the root directory
+        print(f"client: {client}\n")
+        drive_items = await client.me.drive.root.children.get()
+        for item in drive_items:
+            print(item.name)
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 async def upload_file(client, file_path, file_name):
     with open(file_path, 'rb') as upload_file:
@@ -54,11 +63,11 @@ async def main():
     print("Listing files:")
     await list_files(client)
 
-    print("\nUploading file:")
-    await upload_file(client, "path/to/local/file.txt", "uploaded_file.txt")
+    # print("\nUploading file:")
+    # await upload_file(client, "path/to/local/file.txt", "uploaded_file.txt")
 
-    print("\nDownloading file:")
-    await download_file(client, "uploaded_file.txt", "path/to/downloaded_file.txt")
+    # print("\nDownloading file:")
+    # await download_file(client, "uploaded_file.txt", "path/to/downloaded_file.txt")
 
     await client.close()
 
