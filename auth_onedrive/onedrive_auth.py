@@ -1,3 +1,4 @@
+import traceback
 import asyncio
 from dotenv import load_dotenv
 from msgraph import GraphServiceClient
@@ -17,39 +18,26 @@ async def get_onedrive_info(token: AsyncTokenCredential):
         client = GraphServiceClient(credentials=token, scopes=SCOPES)
         print("Client created.")
 
+
+
         # Get user information (optional)
-        # user = await client.me.get()
-        # print("User information:")
-        # print(user)
+        user = await client.me.get()
+        print(f"User: {user.display_name}")
+
         
-        drive = await client.me.drive.get()
-        if drive:
-            print(f"Drive information: {drive}")
-        else:
-            print("Failed to retrieve drive information.")
-
-        # # Get OneDrive information
-        # drive = await client.drive().get()
-        # print("OneDrive information:")
-        # print(drive)
-
-        # # Get a list of files in the root folder (optional)
-        # files = await client.drive("root").children().get()
-        # if files:
-        #     print("Files in the root folder:")
-        #     for file in files.value:
-        #         print(file)
-        # else:
-        #     print("Failed to retrieve files in the root folder.")
+        
+        
     except Exception as e:
-        print(f"Error: {e}")
-        print(f"Error: {e.args}")
+        print(f"An error occurred: {e}")
+        traceback.print_exc()
 
 
 async def main():
     token = await get_access_token()
     if token:
+      print(f"Access token acquired: {token}")
       credential = AsyncTokenCredential(token)
+      print(f"Credential created: {credential}")
       await get_onedrive_info(credential)
     else:
       print("Failed to connect to OneDrive.")
