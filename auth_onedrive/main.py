@@ -19,10 +19,10 @@ def run():
         authority=AUTHORITY,
         client_credential=CLIENT_SECRET,
     )
-# acquire a token on behalf of a user
+    # acquire a token on behalf of a user
     accounts = app.get_accounts()
 
-# if there are no accounts in the cache, the user must sign in
+    # if there are no accounts in the cache, the user must sign in
     if accounts:
         result = app.acquire_token_silent(["User.Read"], account=accounts[0])
     else:
