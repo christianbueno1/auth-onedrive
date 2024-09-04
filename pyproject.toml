@@ -11,6 +11,7 @@ msal = "^1.30.0"
 requests = "^2.32.3"
 msgraph-sdk = "^1.5.4"
 python-dotenv = "^1.0.1"
+pandas = "^2.2.2"
 
 
 [build-system]
@@ -20,3 +21,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = "auth_onedrive.main:run"
 start2 = "auth_onedrive.main2:run"
+start3 = "auth_onedrive.main3:run"
