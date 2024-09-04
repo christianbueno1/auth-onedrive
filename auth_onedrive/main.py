@@ -2,6 +2,7 @@
 import msal
 import os
 from dotenv import load_dotenv
+from msgraph import GraphServiceClient
 
 load_dotenv()
 
@@ -12,26 +13,31 @@ def run():
     CLIENT_ID = os.getenv("CLIENT_ID")
     CLIENT_SECRET = os.getenv("CLIENT_SECRET")
     AUTHORITY = "https://login.microsoftonline.com/" + TENANT_ID
+    # SCOPES = ['https://graph.microsoft.com/.default']
+    SCOPES = ["User.Read"]
 
-    # Create a confidential client application
-    app = msal.ConfidentialClientApplication(
-        CLIENT_ID,
-        authority=AUTHORITY,
-        client_credential=CLIENT_SECRET,
+    # use the PublicClientApplication class to authenticate with Azure AD
+    # Initialize the msal application object
+    app = msal.PublicClientApplication(
+        client_id=CLIENT_ID,
+        authority=AUTHORITY
     )
-    # acquire a token on behalf of a user
-    accounts = app.get_accounts()
-
-    # if there are no accounts in the cache, the user must sign in
-    if accounts:
-        result = app.acquire_token_silent(["User.Read"], account=accounts[0])
+    # Initialize device code flow
+    flow = app.initiate_device_flow(scopes=SCOPES)
+    if 'user_code' in flow:
+        print(flow['message'])
     else:
-        result = app.acquire_token_on_behalf_of(["User.Read"])
+        raise ValueError('Fail to create device flow')
+    # Acquire a token using the device code flow
+    result = app.acquire_token_by_device_flow(flow)
     if "access_token" in result:
-        print(f"Access token: {result['access_token']}")
+        # print(f"Access token: {result['access_token']}")
+        print(f"Access token: ok")
     else:
         print(f"Authentication failed: {result.get('error_description')}")
-
+    
+    # create graph_client using GraphServiceClient class and the access token
+    graph_client = GraphServiceClient(credential=AccessTokenCredential(result['access_token']))
 
 
 if __name__ == "__main__":
