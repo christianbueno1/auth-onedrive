@@ -21,4 +21,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = "auth_onedrive.main:run"
 start2 = "auth_onedrive.main2:run"
-start3 = "auth_onedrive.main3:run"
+start3 = "auth_onedrive.main3:main"

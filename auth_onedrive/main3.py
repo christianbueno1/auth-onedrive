@@ -5,6 +5,14 @@ def read_file(file_path, file_type):
     """
     Reads a file based on its type and prints the contents.
     """
+
+    # if file_type is empty use excel as default
+    if not file_type:
+        file_type = 'excel'
+    # if file_path is empty use a default file in the current directory
+    if not file_path:
+        file_path = 'data.xlsx'
+        
     try:
         if file_type == 'csv':
             data = pd.read_csv(file_path)
