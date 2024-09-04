@@ -37,7 +37,7 @@ def run():
         print(f"Authentication failed: {result.get('error_description')}")
     
     # create graph_client using GraphServiceClient class and the access token
-    graph_client = GraphServiceClient(credential=AccessTokenCredential(result['access_token']))
+    # graph_client = GraphServiceClient(credential=AccessTokenCredential(result['access_token']))
 
 
 if __name__ == "__main__":
