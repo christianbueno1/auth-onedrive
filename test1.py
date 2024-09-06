@@ -24,7 +24,7 @@ def preprocess_text(text):
         'calle', 'avenida', 'plaza', 'carrera', 'camino', 'paseo', 'barrio', 'ciudad', 'provincia', 'pais', 'numero'
     }
     stop_words.update(additional_stop_words)
-    print(f"Stop words in {LANGUAGE}: {stop_words}")
+    # print(f"Stop words in {LANGUAGE}: {stop_words}")
 
     word_tokens = word_tokenize(text.lower())
     filtered_text = [word for word in word_tokens if word.isalnum() and word not in stop_words]
@@ -44,8 +44,10 @@ def calculate_similarity(text1, text2):
     return cosine_similarity(tfidf_matrix)[0][1]
     
 def main():
-    address1 = "Calle de la Princesa, 1, 28008 Madrid, Spain"
-    address2 = "Calle Princesa, 1, 28008 Madrid, España"
+    # address1 = "Calle de la Princesa, 1, 28008 Madrid, Spain"
+    # address2 = "Calle Princesa, 1, 28008 Madrid, España"
+    address1 = "Calle de la Paz, 12, 28001 Madrid, Spain"
+    address2 = "Calle de la Paz, 12, 28001 Madrid, España"
 
     similarity = calculate_similarity(address1, address2)
     print(f"Similarity between the addresses: {similarity}")

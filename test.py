@@ -35,9 +35,11 @@ def compare_address_similarity(address1, address2, language=LANGUAGE):
     return similarity
 
 # Test the function
-address1 = "Calle de la Paz, 12, 28001 Madrid, Spain"
-address2 = "Calle de la Paz, 12, 28001 Madrid, Spain"
+# address1 = "Calle de la Paz, 12, 28001 Madrid, Spain"
+address1 = "MONTE SINAHÍ BARRIO 1 SECTOR 7"
+# address2 = "Calle de la Paz, 12, 28001 Madrid, Spain"
 # address2 = "Calle de la Paz, 12, 28001 Madrid, España"
+address2 = "BARRIO MONTE SINAHÍ"
 similarity = compare_address_similarity(address1, address2)
 print(f"Similarity between the addresses: {similarity}")
 # Output: Similarity between the addresses: 0.9999999999999998
