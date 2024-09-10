@@ -47,16 +47,30 @@ def find_addres_in_excel(file_name, search_address, start_sheet_name=START_SHEET
     end_index = sheet_names.index(end_sheet_name)
 
     # Loop through the sheets in the column column_name, skip the row row, within the specified range
-    for sheet_name in sheet_names[start_index:end_index+1]:
-        data = pd.read_excel(file_name, sheet_name=sheet_name, usecols=column_name)
+
+    sheets_dict = pd.read_excel(file_name, sheet_name=None, usecols=column_name)
+    # for sheet_name in sheet_names[start_index:end_index+1]:
+    for sheet_name, df in sheets_dict.items():
+        if sheet_name < start_sheet_name or sheet_name > end_sheet_name:
+            continue
+        # print(f"sheet data: {data}")
+        # data = pd.read_excel(file_name, sheet_name=sheet_name, usecols=column_name)
+
         # print(f"Sheet name: {sheet_name}")
-        data = data.iloc[row_start: , :]
+        
+        # remove the first row
+        df = df.iloc[row_start:]
+        
         # rows = data.shape[0]
         # columns = data.columns
         # print(f"Rows: {rows}")
         # apply compare_address_similarity function to the data
-        for index, row in data.iterrows():
-            address = row[header]
+        
+        for index, row in df.iterrows():
+            # address = row[header]
+            address = row.values
+            # address to str
+            address = str(address[0])
             # print(f"Address: {address}")
             if not pd.isna(address):
                 similarity = compare_address_similarity(search_address, address)

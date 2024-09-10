@@ -25,6 +25,7 @@ data = df[[COLUMN1, COLUMN2]]
 # rows
 rows = data.shape[0]
 new_column_data = []
+count = 0
 # print(f"Rows: {rows}")
 
 # Find the index of the existing column
@@ -39,7 +40,6 @@ existing_col_index = df.columns.get_loc(COLUMN1)
 for index, row in data.iterrows():
     address = row[COLUMN1]
     neighborhood = row[COLUMN2]
-    count = 0
     print(f"Index: {index}")
     # print(f"Address: {address}")
     # print(f"Neighborhood: {neighborhood}")
