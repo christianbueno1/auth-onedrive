@@ -35,8 +35,12 @@ def calculate_similarity(text1, text2):
     """
     Calculates the cosine similarity between two input texts.
     """
+    print(f"Text1: {text1}")
+    print(f"Text2: {text2}")
     preprocessed_text1 = preprocess_text(text1)
     preprocessed_text2 = preprocess_text(text2)
+    print(f"Preprocessed text1: {preprocessed_text1}")
+    print(f"Preprocessed text2: {preprocessed_text2}")
 
     tfidf = TfidfVectorizer()
     tfidf_matrix = tfidf.fit_transform([preprocessed_text1, preprocessed_text2])
@@ -46,8 +50,10 @@ def calculate_similarity(text1, text2):
 def main():
     # address1 = "Calle de la Princesa, 1, 28008 Madrid, Spain"
     # address2 = "Calle Princesa, 1, 28008 Madrid, España"
-    address1 = "Calle de la Paz, 12, 28001 Madrid, Spain"
-    address2 = "Calle de la Paz, 12, 28001 Madrid, España"
+    # address1 = "Calle de la Paz, 12, 28001 Madrid, Spain"
+    # address2 = "Calle de la Paz, 12, 28001 Madrid, España"
+    address1 = "MONTE SINAHÍ BARRIO 1 SECTOR 7"
+    address2 = "BARRIO MONTE SINAHÍ"
 
     similarity = calculate_similarity(address1, address2)
     print(f"Similarity between the addresses: {similarity}")
