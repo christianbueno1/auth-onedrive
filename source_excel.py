@@ -38,15 +38,15 @@ existing_col_index = df.columns.get_loc(COLUMN1)
 # print(f"New Excel file saved as {NEW_FILE_NAME}")
 
 for index, row in data.iterrows():
-    address = row[COLUMN1]
+    search_address = row[COLUMN1]
     neighborhood = row[COLUMN2]
     print(f"Index: {index}")
-    # print(f"Address: {address}")
+    # print(f"Address: {search_address}")
     # print(f"Neighborhood: {neighborhood}")
     # print("\n")
     # Insert the new column to the left of the existing column
     # new_data = None
-    new_data = find_addres_in_excel(PATTERN_FILE_PATH, address)
+    new_data = find_addres_in_excel(PATTERN_FILE_PATH, search_address)
 
     if new_data is not None:
         # print(f"New column data: {new_data}")
