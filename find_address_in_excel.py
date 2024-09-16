@@ -23,48 +23,61 @@ FILE_PATH = os.path.join(DOWNLOADS_PATH, FILE_NAME)
 # start and end sheet names
 START_SHEET_NAME = 'A-01 - BARRIOS'
 END_SHEET_NAME = 'A-18 - BARRIOS'
-COLUMN_NAME = 'B'
+COLUMNS = 'B, C'
 # remove the first row
 ROW_START = 1
 BASE_PERCENTAGE_SIMILARITY = 0.6
 BOOST = 0.2
 LEVEL = 0
+HEADER_ROW = 1
 
-def find_address_in_excel(file_name, search_address, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, column_name=COLUMN_NAME, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY, level=LEVEL):
+def find_address_in_excel(file_name, search_address, search_county, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, columns=COLUMNS, header_row=HEADER_ROW, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY, level=LEVEL):
     """
     Find the address in the excel file
     """
     header = 'Unnamed: 1'
     max_similarity = base_percentage_similarity
     address_find = None
+    county_find = None
     sheet_name_find = None
-
-    sheets_dict = pd.read_excel(file_name, sheet_name=None, usecols=column_name)
+    count_all_sheet_coincidences = 0
+    sheets_dict = pd.read_excel(file_name, sheet_name=None, header=header_row, usecols=columns)
     for sheet_name, df in sheets_dict.items():
         if sheet_name < start_sheet_name or sheet_name > end_sheet_name:
             continue
         print(f"Sheet namee: {sheet_name}")
         # remove the first row
+        # print(f"df: {df}")
         df = df.iloc[row_start:]
         # apply compare_address_similarity function to the data
         # count_rows = len(df)
         for index, row in df.iterrows():
             # address to str
+            # print(f"Row: {row} row.values: {row.values}")
             address = str(row.values[0])
+            # parroquias
+            county = str(row.values[1])
             if not pd.isna(address):
-                # similarity = compare_address_similarity(search_address, address)
                 match level:
                     case 0:
-                        similarity = is_address_in_address(search_address, address)
+                        address_in_address = is_address_in_address(search_address, address)
+                        county_eq = is_county_equals(search_county, county)
+                        similarity = address_in_address and county_eq
+                        if similarity:
+                            if not(is_both_address_one_word(search_address, address)) and not(is_both_address_more_than_one_word(search_address, address)):
+                                similarity = False
                     case 1:
                         similarity = compare_address_similarity(search_address, address)
-                if similarity > max_similarity:
+                # use equal to know if there is a match                        
+                if similarity >= max_similarity:
+                    count_all_sheet_coincidences += 1
                     max_similarity = similarity
                     address_find = address
+                    county_find = county
                     sheet_name_find = sheet_name
                     # print(f"Sheet name: {sheet_name}")
                     # print(f"Similarity: {similarity}")
-                    print(f"Found address: {address}\n")
+                    print(f"Found address: {address}, county: {county}")
                     # print(f"max_similarity: {max_similarity}")
                     # ask to type enter
                     # input("Press Enter to continue...")
@@ -77,8 +90,10 @@ def find_address_in_excel(file_name, search_address, start_sheet_name=START_SHEE
     
     print(f"\nMax similarity: {max_similarity}")
     print(f"address: {search_address}")
-    print(f"Found address: {address_find}")
+    print(f"Found address(pattern): {address_find}")
+    print(f"Found county(pattern): {search_county}")
     print(f"Sheet name: {sheet_name_find}")
+    print(f"Count of all coincidences: {count_all_sheet_coincidences}")
     # ask for typing enter
     input("Press Enter to continue...\n")
 
@@ -123,6 +138,7 @@ def compare_address_similarity(address1, address2, language=LANGUAGE):
     similarity = cosine_similarity(matrix[0], matrix[1])[0][0]
     return similarity
 
+# remove special characters and convert to lowercase
 def remove_special_characters(phrase):
     # convert to lowercase
     phrase = phrase.lower()
@@ -134,32 +150,62 @@ def remove_special_characters(phrase):
     phrase = phrase.strip()
     return phrase
 
+# check if counties are equals
+def is_county_equals(county1, county2) -> bool:
+    """
+    Check if county1 is equals to county2
+    """
+    county1 = remove_special_characters(county1)
+    county2 = remove_special_characters(county2)
+    return county1 == county2
+
 # function using in operator
-def is_address_in_address(address1, address2):
+def is_address_in_address(address1, address2) -> bool:
     """
     Check if address1 is in address2 or vice versa
     """
-    # remove special characters
+    result = False
+    # remove special characters and convert to lowercase
     address1 = remove_special_characters(address1)
     address2 = remove_special_characters(address2)
-    return address1.lower() in address2.lower() or address2.lower() in address1.lower()
+    return address1 in address2 or address2 in address1    
+    
 
-# test the function
-# search_address = "PRE-COOP. UNION DE BANANEROS BLOQUE 4"
-# search_address = "Isla trinitaria coop luz de América "
-# search_address = "La 14 y 4 de noviembre "
-# search_address = "barrio lindo"
-# sheet_name = find_address_in_excel(FILE_PATH, search_address)
-# print(f"Sheet name: {sheet_name}")
+# check if address1 and address2 have both one word
+def is_both_address_one_word(address1, address2) -> bool:
+    """
+    Check if address1 and address2 have both one word
+    """
+    address1 = address1.split()
+    address2 = address2.split()
+    return len(address1) == 1 and len(address2) == 1
+
+# check if address1 and address2 have both more than one word
+def is_both_address_more_than_one_word(address1, address2) -> bool:
+    """
+    Check if address1 and address2 have both more than one word
+    """
+    address1 = address1.split()
+    address2 = address2.split()
+    return len(address1) > 1 and len(address2) > 1
+
 
 if __name__=="__main__":
     
-    search_address = "flor de bastion bloque 2"
+    # search_address = "guayacanes"
+    search_address = "los ángeles"
+    # search_address = "Coop los ángeles mz 487 sl 6"
+    # search_address = "Coop los ángeles"
+    county = "parroquia ximena"
+    # county = "parroquia tarqui"
     # address2 = "COOP. FLOR DE BASTIÓN BLOQUE 13"
     # similarity = is_address_in_address(search_address, address2)
     # print(f"Similarity: {similarity}")
-    sheet_name = find_address_in_excel(FILE_PATH, search_address)
+    sheet_name = find_address_in_excel(FILE_PATH, search_address, county)
     print(f"Sheet name: {sheet_name}")
+
+    # sheets_dict = pd.read_excel(FILE_PATH, sheet_name=None, header=HEADER_ROW, usecols='B, C')
+    # print(f"Sheet dict: {sheets_dict}")
 
     # search_address = "maria auxiliadora"
     # search_address = "paraiso de la flor"

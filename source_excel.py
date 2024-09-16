@@ -7,7 +7,7 @@ HOME = os.getenv('HOME')
 FILE_NAME = 'Copy of ASISTENCIA A TALLERES (respuestas).xlsx'
 DOWNLOADS_PATH = os.path.join(HOME, 'Downloads')
 FILE_PATH = os.path.join(DOWNLOADS_PATH, FILE_NAME)
-SHEET_NAME = 'Sheet1'
+SHEET_NAME = 'Sheet2'
 # from 0
 SHEET_INDEX = 1
 COLUMN1 = 'Ingresa el Barrio en que vives'
