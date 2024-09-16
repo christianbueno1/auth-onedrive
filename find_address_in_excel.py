@@ -28,8 +28,9 @@ COLUMN_NAME = 'B'
 ROW_START = 1
 BASE_PERCENTAGE_SIMILARITY = 0.6
 BOOST = 0.2
+LEVEL = 0
 
-def find_address_in_excel(file_name, search_address, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, column_name=COLUMN_NAME, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY):
+def find_address_in_excel(file_name, search_address, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, column_name=COLUMN_NAME, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY, level=LEVEL):
     """
     Find the address in the excel file
     """
@@ -46,46 +47,40 @@ def find_address_in_excel(file_name, search_address, start_sheet_name=START_SHEE
         # remove the first row
         df = df.iloc[row_start:]
         # apply compare_address_similarity function to the data
-        count_rows = len(df)
-        count_rowss = 0
+        # count_rows = len(df)
         for index, row in df.iterrows():
             # address to str
             address = str(row.values[0])
             if not pd.isna(address):
                 # similarity = compare_address_similarity(search_address, address)
-                # exists_in = is_address_in_address(search_address, address)
-                # if exists_in:
-                #     similarity = 1
-                # else:
-                #     # similarity = compare_address_similarity(search_address, address)
-                #     similarity = 0.6
-                # if similarity > max_similarity:
-                #     max_similarity = similarity
-                #     address_find = address
-                #     sheet_name_find = sheet_name
+                match level:
+                    case 0:
+                        similarity = is_address_in_address(search_address, address)
+                    case 1:
+                        similarity = compare_address_similarity(search_address, address)
+                if similarity > max_similarity:
+                    max_similarity = similarity
+                    address_find = address
+                    sheet_name_find = sheet_name
                     # print(f"Sheet name: {sheet_name}")
                     # print(f"Similarity: {similarity}")
-                    # print(f"Found address: {address}\n")
-                pass
-            count_rowss += 1
+                    print(f"Found address: {address}\n")
+                    # print(f"max_similarity: {max_similarity}")
+                    # ask to type enter
+                    # input("Press Enter to continue...")
         #     if similarity == 1:
         #         break
         # if max_similarity == 1:
         #     break
-        if count_rowss == count_rows:
-            print(f"row variables are equal")
-        else:
-            print(f"row variables are not equal")
-        print(f"count_rows: {count_rows}, count_rowss: {count_rowss}\n")
-        # ask for typing enter
-        input("Press Enter to continue...")
 
 
     
-    print(f"Max similarity: {max_similarity}")
+    print(f"\nMax similarity: {max_similarity}")
     print(f"address: {search_address}")
-    print(f"Found address: {address_find}\n")
-    # print(f"Sheet name: {sheet_name_find}")
+    print(f"Found address: {address_find}")
+    print(f"Sheet name: {sheet_name_find}")
+    # ask for typing enter
+    input("Press Enter to continue...\n")
 
     return sheet_name_find
 
@@ -144,6 +139,9 @@ def is_address_in_address(address1, address2):
     """
     Check if address1 is in address2 or vice versa
     """
+    # remove special characters
+    address1 = remove_special_characters(address1)
+    address2 = remove_special_characters(address2)
     return address1.lower() in address2.lower() or address2.lower() in address1.lower()
 
 # test the function
@@ -156,9 +154,13 @@ def is_address_in_address(address1, address2):
 
 if __name__=="__main__":
     
-    search_address = "flor de bastion bloque 119"
+    search_address = "flor de bastion bloque 2"
+    # address2 = "COOP. FLOR DE BASTIÓN BLOQUE 13"
+    # similarity = is_address_in_address(search_address, address2)
+    # print(f"Similarity: {similarity}")
     sheet_name = find_address_in_excel(FILE_PATH, search_address)
     print(f"Sheet name: {sheet_name}")
+
     # search_address = "maria auxiliadora"
     # search_address = "paraiso de la flor"
     # name = 'christian'

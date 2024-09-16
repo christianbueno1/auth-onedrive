@@ -50,13 +50,11 @@ def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=None):
             # print(f"Header: {header}, Value: {value}")
             search_address = value
             # Insert the new column to the left of the existing column
-            sheet_name_founded = find_address_in_excel(PATTERN_FILE_PATH, search_address)
+            # sheet_name_founded = find_address_in_excel(PATTERN_FILE_PATH, search_address)
             if sheet_name_founded is not None:
                 positive_new_value_inserted_count += 1
-                if sheet_name_founded:
-                    break
             else:
-                sheet_name_founded = 'No coincide'
+                sheet_name_founded = 'No existe'
             
         
         new_columns_data.append(new_row)
@@ -67,9 +65,9 @@ def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=None):
 
     return new_columns_data
 
-    # Insert the new column to the left of the existing column
-    # df.insert(existing_col_index, NEW_COLUMN_NAME, new_column_data)
-    # df.to_excel(NEW_FILE_NAME, sheet_name=sheet_name, index=False)
+# Insert the new column to the left of the existing column
+# df.insert(existing_col_index, NEW_COLUMN_NAME, new_column_data)
+# df.to_excel(NEW_FILE_NAME, sheet_name=sheet_name, index=False)
 
 def make_unique_headers(headers):
     """
@@ -86,10 +84,35 @@ def make_unique_headers(headers):
 
 if __name__ == "__main__":
     print(f"from main: {__name__}")
+    # sheet_name = pd.ExcelFile(FILE_PATH).sheet_names[0]
+    # sheet_name = pd.ExcelFile(FILE_PATH).sheet_names
+    # print(f"Sheet name: {sheet_name}, type: {type(sheet_name)}")
+
+    # df = pd.read_excel(FILE_PATH, sheet_name=1)
+    # # count of rows
+    # row_count = df.shape[0]
+    # print(f"Row count: {row_count}")
+    # columns = [COLUMN1, COLUMN2]
+    # df = df[columns]
+    # for index, row in df.iterrows():
+    #     print(f"Index: {index}")
+    #     # print(f"Row: {row}, type: {type(row)}\n")
+    # #     # column1 = row.iloc[0]
+    # #     # column1 = row.iloc[1]
+    # #     # print(f"Column1: {column1}")
+    # #     # ask for typing enter to continue
+    #     for header, value in row.items():
+    #         print(f"Header: {header}, Value: {value}")
+    #     print("\n")
+    #     input("Press Enter to continue...")
 
     new_column_data = read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=[COLUMN1, COLUMN2])
     # ask for typing enter to continue
-    # input("Press Enter to continue...")
+    input("Press Enter to continue...")
     # create a new dataframe with new_column_data
-    # df = pd.DataFrame(new_column_data)
-    # print(f"df: {df}")
+    df = pd.DataFrame(new_column_data)
+    print(f"df: {df}")
+
+    # test make_unique_headers
+    # headers = ['a', 'b', 'a', 'b', 'a', 'b']
+    # print(make_unique_headers(headers))
