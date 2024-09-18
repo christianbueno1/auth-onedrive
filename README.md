@@ -27,4 +27,5 @@ Cosine Similarity: Measures the cosine of the angle between the vectors represen
 Levenshtein Distance: Calculates the minimum number of edits (insertions, deletions, substitutions) required to transform one string into another.
 
 - remueve la palabra parroquia.
-- 
+- sudo dnf install python3-tkinter
+- poetry run startgui

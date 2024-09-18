@@ -476,6 +476,35 @@ test = ["certifi", "cryptography-vectors (==43.0.1)", "pretend", "pytest (>=6.2.
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "customtkinter"
+version = "5.2.2"
+description = "Create modern looking GUIs with Python"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "customtkinter-5.2.2-py3-none-any.whl", hash = "sha256:14ad3e7cd3cb3b9eb642b9d4e8711ae80d3f79fb82545ad11258eeffb2e6b37c"},
+    {file = "customtkinter-5.2.2.tar.gz", hash = "sha256:fd8db3bafa961c982ee6030dba80b4c2e25858630756b513986db19113d8d207"},
+]
+
+[package.dependencies]
+darkdetect = "*"
+packaging = "*"
+
+[[package]]
+name = "darkdetect"
+version = "0.8.0"
+description = "Detect OS Dark Mode from Python"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "darkdetect-0.8.0-py3-none-any.whl", hash = "sha256:a7509ccf517eaad92b31c214f593dbcf138ea8a43b2935406bbd565e15527a85"},
+    {file = "darkdetect-0.8.0.tar.gz", hash = "sha256:b5428e1170263eb5dea44c25dc3895edd75e6f52300986353cd63533fe7df8b1"},
+]
+
+[package.extras]
+macos-listener = ["pyobjc-framework-Cocoa"]
+
+[[package]]
 name = "deprecated"
 version = "1.2.14"
 description = "Python @deprecated decorator to deprecate old python classes, functions or methods."
@@ -1159,6 +1188,17 @@ files = [
 [package.dependencies]
 deprecated = ">=1.2.6"
 opentelemetry-api = "1.27.0"
+
+[[package]]
+name = "packaging"
+version = "24.1"
+description = "Core utilities for Python packages"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
+    {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
+]
 
 [[package]]
 name = "pandas"
@@ -1964,4 +2004,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "a77a5154c374a7b22d439ecec6d7904383108aacb50cede68f5023532a671601"
+content-hash = "1530fdedce5592c945f3a2414e88c2f88a515f3a9117fb16e819696c9a2d37ce"
