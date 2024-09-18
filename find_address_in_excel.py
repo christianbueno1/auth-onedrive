@@ -31,7 +31,7 @@ BOOST = 0.2
 LEVEL = 0
 HEADER_ROW = 1
 
-def find_address_in_excel(file_name, search_address, search_county, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, columns=COLUMNS, header_row=HEADER_ROW, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY, level=LEVEL):
+def find_address_in_excel(file_name, search_address, search_county, start_sheet_name=START_SHEET_NAME, end_sheet_name=END_SHEET_NAME, columns=COLUMNS, header_row=HEADER_ROW, row_start=ROW_START, base_percentage_similarity=BASE_PERCENTAGE_SIMILARITY, level=LEVEL) -> list:
     """
     Find the address in the excel file
     """
@@ -134,9 +134,9 @@ def find_address_in_excel(file_name, search_address, search_county, start_sheet_
 
     # ask for typing enter
     # input("Press Enter to continue...\n")
-    if count_all_sheet_coincidences > 1 and not address_eq:
+    if len(sheet_data) > 1 and not address_eq:
         sheet_name_find = None
-    return sheet_name_find
+    return sheet_name_find, address_find
 
 
 
