@@ -26,3 +26,5 @@ Jaccard Similarity: Calculates the intersection over union of the sets of tokens
 Cosine Similarity: Measures the cosine of the angle between the vectors representing the tokenized texts.
 Levenshtein Distance: Calculates the minimum number of edits (insertions, deletions, substitutions) required to transform one string into another.
 
+- remueve la palabra parroquia.
+- 

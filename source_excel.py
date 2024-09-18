@@ -12,6 +12,7 @@ SHEET_NAME = 'Sheet2'
 SHEET_INDEX = 1
 COLUMN1 = 'Ingresa el Barrio en que vives'
 COLUMN2 = 'Ingresa tu dirección y una referencia'
+COLUMN3 = 'Ingresa la Parroquia a la que pertenece tu Sector'
 NEW_COLUMN_NAME = 'AGA'
 NEW_FILE_NAME = f'{FILE_NAME}-{time.strftime("%Y-%m-%d-%H-%M-%S")}.xlsx'
 
@@ -19,7 +20,7 @@ PATTERN_FILE_NAME = 'AGA - LIM_POB_PARR_BARR 07-2024.xlsx'
 PATTERN_FILE_PATH = os.path.join(DOWNLOADS_PATH, PATTERN_FILE_NAME)
 
 # read the file
-def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=None):
+def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=[COLUMN1, COLUMN2, COLUMN3]):
     """
     Read the file
     Atributes:
@@ -42,7 +43,14 @@ def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=None):
     for index, row in df.iterrows():
         print(f"Index: {index}")
         new_row = {}
+        county = row.values[2]
+        # print(f"county: {county}")
+        # ask to type enter
+        # input("Press Enter to continue...")
         for header, value in row.items():
+            # if header == columns[2] break
+            if header == columns[2]:
+                continue
             sheet_name_founded = None
             sheet_name_founded = f"{str(value)} checked"
             new_header_name = f"similarity {header}"
@@ -50,13 +58,16 @@ def read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=None):
             # print(f"Header: {header}, Value: {value}")
             search_address = value
             # Insert the new column to the left of the existing column
-            sheet_name_founded = find_address_in_excel(PATTERN_FILE_PATH, search_address)
+            sheet_name_founded = find_address_in_excel(PATTERN_FILE_PATH, search_address, county)
+            # ask to type enter
+            input("Press Enter to continue...*")
             if sheet_name_founded is not None:
                 positive_new_value_inserted_count += 1
                 if sheet_name_founded:
                     break
             else:
                 sheet_name_founded = 'No coincide'
+            
             
         
         new_columns_data.append(new_row)
@@ -87,7 +98,7 @@ def make_unique_headers(headers):
 if __name__ == "__main__":
     print(f"from main: {__name__}")
 
-    new_column_data = read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX, columns=[COLUMN1, COLUMN2])
+    new_column_data = read_file(file_path=FILE_PATH, sheet_name=SHEET_INDEX)
     # ask for typing enter to continue
     # input("Press Enter to continue...")
     # create a new dataframe with new_column_data
