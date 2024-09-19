@@ -6,6 +6,8 @@ import os
 # Initialize customtkinter
 ctk.set_appearance_mode("System")  # Modes: "System" (default), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (default), "dark-blue", "green"
+# download path for any operating system
+DOWNLOAD_PATH = os.path.expanduser("~/Downloads")
 
 
 class ExcelFileGUI(ctk.CTk):
@@ -14,11 +16,12 @@ class ExcelFileGUI(ctk.CTk):
 
         # Set window title and size
         self.title("Excel File Selector")
-        self.geometry("500x200")
+        self.geometry("500x300")
 
         # Label for displaying the selected file path
         self.label = ctk.CTkLabel(self, text="No file selected", width=400)
-        self.label.pack(pady=20)
+        # self.label.pack(pady=20)
+        self.label.pack(side="right", padx=20, pady=20)
 
         # Button to trigger file selection
         self.file_button = ctk.CTkButton(self, text="Select Excel File", command=self.select_file)
@@ -32,11 +35,9 @@ class ExcelFileGUI(ctk.CTk):
         self.file_path = None
 
     def select_file(self):
-        # Set the default download directory
-        default_download_directory = os.path.expanduser("~/Downloads")
         # Open file dialog to select an Excel file
         file_path = filedialog.askopenfilename(
-            initialdir=default_download_directory,
+            initialdir=DOWNLOAD_PATH,
             filetypes=[("Excel files", "*.xlsx *.xls")]
         )
         if file_path:
