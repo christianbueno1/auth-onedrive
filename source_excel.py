@@ -14,6 +14,7 @@ COLUMN1 = 'Ingresa el Barrio en que vives'
 COLUMN2 = 'Ingresa tu dirección y una referencia'
 COLUMN3 = 'Ingresa la Parroquia a la que pertenece tu Sector'
 NEW_COLUMNS_NAME = ['AGA', 'address']
+
 NEW_FILE_NAME = f'{FILE_NAME}-{time.strftime("%Y-%m-%d-%H-%M-%S")}.xlsx'
 NEW_FILE_NAME_PATH = os.path.join(DOWNLOADS_PATH, NEW_FILE_NAME)
 
