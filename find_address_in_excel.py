@@ -13,8 +13,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 # patterns
-HOME = os.getenv('HOME')
-DOWNLOADS_PATH = os.path.join(HOME, 'Downloads')
+DOWNLOADS_PATH = os.path.join(os.path.expanduser('~'), 'Downloads')
 FILE_NAME = 'AGA - LIM_POB_PARR_BARR 07-2024.xlsx'
 FILE_PATH = os.path.join(DOWNLOADS_PATH, FILE_NAME)
 # print(f"File path: {FILE_PATH}")
@@ -313,8 +312,21 @@ if __name__=="__main__":
     # print(f"Similarity: {similarity}")
     # search_address = remove_special_words(search_address)
     # print(f"Search address: {search_address}")
-    sheet_name = find_address_in_excel(FILE_PATH, search_address, county)
-    print(f"Sheet name: {sheet_name}")
+    # sheet_name = find_address_in_excel(FILE_PATH, search_address, county)
+    # print(f"Sheet name: {sheet_name}")
+
+    # DOWNLOADS_PATH = os.path.join(os.path.expanduser('~'), 'Downloads')
+    DOWNLOADS_PATH = os.path.expanduser('~/Downloads')
+    # if not exists the path create it
+    if not os.path.exists(DOWNLOADS_PATH):
+        os.makedirs(DOWNLOADS_PATH)
+    print(f"Downloads path: {DOWNLOADS_PATH}")
+    df = pd.read_excel(FILE_PATH, sheet_name=21, header=1, usecols=None)
+    rows, columns = df.shape
+    print(f"Rows: {rows}, Columns: {columns}")
+    # for sheet_name, data in df.items():
+    #     print(f"Sheet name: {sheet_name}")
+    #     print(f"Data: {data}")
 
     # sheets_dict = pd.read_excel(FILE_PATH, sheet_name=None, header=HEADER_ROW, usecols='B, C')
     # print(f"Sheet dict: {sheets_dict}")
